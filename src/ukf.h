@@ -53,7 +53,7 @@ public:
   double std_radphi_;
 
   ///* Radar measurement noise standard deviation radius change in m/s
-  double std_radrd_ ;
+  double std_radrd_;
 
   ///* Weights of sigma points
   VectorXd weights_;
@@ -102,6 +102,15 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+private:
+  void init(MeasurementPackage meas_package);
+  void AugmentSigmaPoints(MatrixXd* Xsig_out);
+  void PredictSigmaPoints(const MatrixXd& Xsig_aug, const double delta_t);
+  void PredictMeanAndCovariance();
+  void PredictRadar(VectorXd* z_out, MatrixXd* S_out, MatrixXd* Zsig_out);
+  MatrixXd H_laser_;
+  MatrixXd R_laser_;
 };
 
 #endif /* UKF_H */
