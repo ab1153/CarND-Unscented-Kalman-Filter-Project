@@ -27,7 +27,7 @@ UKF::UKF() {
   std_a_ = 1;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
-  std_yawdd_ = 0.6;
+  std_yawdd_ = 1;
 
   // Laser measurement noise standard deviation position1 in m
   std_laspx_ = 0.15;
@@ -99,6 +99,12 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
   }
 
   double dt = meas_package.timestamp_ - time_us_;
+
+  double xy = x_(0) * x_(0) + x_(1) * x_(1);
+  if (dt < 0.001 || xy < 0.001) {
+    return;
+  }
+
   time_us_ = meas_package.timestamp_;
 
   Prediction(dt / 1000000.0);
